@@ -1,6 +1,7 @@
 package ader.getout;
 
 import android.location.Location;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -25,7 +26,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static ader.getout.PLACE_TYPE.CheckPoint;
-import static ader.getout.PLACE_TYPE.PotOfGold;
 
 public class MapActivity extends FragmentActivity {
     private Button close;
@@ -39,6 +39,7 @@ public class MapActivity extends FragmentActivity {
     private RelativeLayout relativeLayout;
     private ArrayList<Place> allPlaces;
     private Button type;
+    private MediaPlayer mediaPlayer;
 
     public MapActivity() {
         dictionary = new HashMap<String, Place>();
@@ -59,8 +60,7 @@ public class MapActivity extends FragmentActivity {
         ///////////listView1/////////////////////////////
         listView = (ListView) findViewById(R.id.listView);
         listView.setVisibility(View.GONE);
-        String[] values = {PLACE_TYPE.CheckPoint.toString(), PLACE_TYPE.Mushroom.toString(), PLACE_TYPE.Home.toString(),
-                PotOfGold.toString(), PLACE_TYPE.Coin.toString(), PLACE_TYPE.Chest.toString(), PLACE_TYPE.Manhole.toString()};
+        String[] values = {PLACE_TYPE.CheckPoint.toString(), PLACE_TYPE.Mushroom.toString(), PLACE_TYPE.Coin.toString(), PLACE_TYPE.Chest.toString(), PLACE_TYPE.Manhole.toString()};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, values);
@@ -82,6 +82,8 @@ public class MapActivity extends FragmentActivity {
         mMap.setMyLocationEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
         type.setText("HYBRID");
+
+
         init();
     }
 
@@ -131,16 +133,17 @@ public class MapActivity extends FragmentActivity {
                                     listView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                         @Override
                                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                            myPlace = dm.myObject(latLng.latitude, latLng.longitude, 0, "", "CheckPoint", position + 1, "By me", GENDER_TYPE.Male, PLACE_TYPE.CheckPoint);
+                                            myPlace = dm.myObject(latLng.latitude, latLng.longitude, 0, "", "CheckPoint", position + 1, "By ADMIN", GENDER_TYPE.Male, PLACE_TYPE.CheckPoint);
                                             dictionary.put(myPlace.getId(), myPlace);
                                             allPlaces.add(myPlace);
-                                            if(myPlace != null)
-                                            mMap.addMarker(new MarkerOptions()
-                                                            .position(new LatLng(myPlace.getLat(), myPlace.getLon()))
-                                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.qr_checkpoint2))
-                                                            .title(myPlace.getName())
-                                                            .snippet("level: " + String.valueOf(myPlace.getLevel() + "  " + myPlace.getPlace().toString() + "  " + myPlace.getDesc()))
-                                            );
+                                            if (myPlace != null)
+                                                mMap.addMarker(new MarkerOptions()
+                                                                .position(new LatLng(myPlace.getLat(), myPlace.getLon()))
+                                                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.qr_checkpoint2))
+                                                                .title(myPlace.getName())
+                                                                .snippet("level: " + String.valueOf(myPlace.getLevel() + "  " + myPlace.getPlace().toString() + "  " + myPlace.getDesc()))
+                                                );
+                                            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(myPlace.getLat(), myPlace.getLon())));
                                             listView1.setVisibility(View.INVISIBLE);
                                             close.setVisibility(View.INVISIBLE);
                                         }
@@ -152,123 +155,93 @@ public class MapActivity extends FragmentActivity {
                                     listView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                         @Override
                                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                            myPlace = dm.myObject(latLng.latitude, latLng.longitude, 0, "", "Mushroom", position + 1, "By me", GENDER_TYPE.Male, PLACE_TYPE.Mushroom);
+                                            myPlace = dm.myObject(latLng.latitude, latLng.longitude, 0, "", "Mushroom", position + 1, "By ADMIN", GENDER_TYPE.Male, PLACE_TYPE.Mushroom);
                                             dictionary.put(myPlace.getId(), myPlace);
                                             allPlaces.add(myPlace);
-                                            if(myPlace != null)
-                                            mMap.addMarker(new MarkerOptions()
-                                                            .position(new LatLng(myPlace.getLat(), myPlace.getLon()))
-                                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.qr_mushroom2))
-                                                            .title(myPlace.getName())
-                                                            .snippet("level: " + String.valueOf(myPlace.getLevel() + "  " + myPlace.getPlace().toString() + "  " + myPlace.getDesc()))
-                                            );
+                                            if (myPlace != null)
+                                                mMap.addMarker(new MarkerOptions()
+                                                                .position(new LatLng(myPlace.getLat(), myPlace.getLon()))
+                                                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.qr_mushroom2))
+                                                                .title(myPlace.getName())
+                                                                .snippet("level: " + String.valueOf(myPlace.getLevel() + "  " + myPlace.getPlace().toString() + "  " + myPlace.getDesc()))
+                                                );
+                                            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(myPlace.getLat(), myPlace.getLon())));
                                             listView1.setVisibility(View.INVISIBLE);
                                             close.setVisibility(View.INVISIBLE);
                                         }
                                     });
                                     break;
                                 case 2:
-                                    myPlace = dm.myObject(latLng.latitude, latLng.longitude, 0, "", "Home", 0, "By me", GENDER_TYPE.Male, PLACE_TYPE.Home);
-                                    dictionary.put(myPlace.getId(), myPlace);
-                                    allPlaces.add(myPlace);
-                                    if(myPlace != null)
-                                    mMap.addMarker(new MarkerOptions()
-                                                    .position(new LatLng(myPlace.getLat(), myPlace.getLon()))
-                                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.qr_house3))
-                                                    .title(myPlace.getName())
-                                                    .snippet("level: " + String.valueOf(myPlace.getLevel() + "  " + myPlace.getPlace().toString() + "  " + myPlace.getDesc()))
-                                    );
-                                    listView.setVisibility(View.INVISIBLE);
-                                    close.setVisibility(View.INVISIBLE);
-                                    break;
-                                case 3:
                                     listView.setVisibility(View.INVISIBLE);
                                     listView1.setVisibility(View.VISIBLE);
                                     listView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                         @Override
                                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                            myPlace = dm.myObject(latLng.latitude, latLng.longitude, 0, "", "PotOfGold", position + 1, "By me", GENDER_TYPE.Male, PotOfGold);
+                                            myPlace = dm.myObject(latLng.latitude, latLng.longitude, 0, "", "Coin", position + 1, "By ADMIN", GENDER_TYPE.Male, PLACE_TYPE.Coin);
                                             dictionary.put(myPlace.getId(), myPlace);
                                             allPlaces.add(myPlace);
-                                            if(myPlace != null)
-                                            mMap.addMarker(new MarkerOptions()
-                                                            .position(new LatLng(myPlace.getLat(), myPlace.getLon()))
-                                                            .title(myPlace.getName())
-                                                            .snippet("level: " + String.valueOf(myPlace.getLevel() + "  " + myPlace.getPlace().toString() + "  " + myPlace.getDesc()))
-                                            );
+                                            if (myPlace != null)
+                                                mMap.addMarker(new MarkerOptions()
+                                                                .position(new LatLng(myPlace.getLat(), myPlace.getLon()))
+                                                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.qr_coin))
+                                                                .title(myPlace.getName())
+                                                                .snippet("level: " + String.valueOf(myPlace.getLevel() + "  " + myPlace.getPlace().toString() + "  " + myPlace.getDesc()))
+                                                );
+                                            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(myPlace.getLat(), myPlace.getLon())));
                                             listView1.setVisibility(View.INVISIBLE);
                                             close.setVisibility(View.INVISIBLE);
                                         }
                                     });
+                                    break;
+                                case 3:
+                                    myPlace = dm.myObject(latLng.latitude, latLng.longitude, 0, "", "Chest", 0, "By ADMIN", GENDER_TYPE.Male, PLACE_TYPE.Chest);
+                                    dictionary.put(myPlace.getId(), myPlace);
+                                    allPlaces.add(myPlace);
+                                    if (myPlace != null)
+                                        mMap.addMarker(new MarkerOptions()
+                                                        .position(new LatLng(myPlace.getLat(), myPlace.getLon()))
+                                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.qr_chest))
+                                                        .title(myPlace.getName())
+                                                        .snippet("level: " + String.valueOf(myPlace.getLevel() + "  " + myPlace.getPlace().toString() + "  " + myPlace.getDesc()))
+                                        );
+                                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(myPlace.getLat(), myPlace.getLon())));
+                                    listView.setVisibility(View.INVISIBLE);
+                                    close.setVisibility(View.INVISIBLE);
                                     break;
                                 case 4:
                                     listView.setVisibility(View.INVISIBLE);
                                     listView1.setVisibility(View.VISIBLE);
-                                    listView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                        @Override
-                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                            myPlace = dm.myObject(latLng.latitude, latLng.longitude, 0, "", "Coin", position + 1, "By me", GENDER_TYPE.Male, PLACE_TYPE.Coin);
-                                            dictionary.put(myPlace.getId(), myPlace);
-                                            allPlaces.add(myPlace);
-                                            if(myPlace != null)
-                                            mMap.addMarker(new MarkerOptions()
-                                                            .position(new LatLng(myPlace.getLat(), myPlace.getLon()))
-                                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.qr_coin))
-                                                            .title(myPlace.getName())
-                                                            .snippet("level: " + String.valueOf(myPlace.getLevel() + "  " + myPlace.getPlace().toString() + "  " + myPlace.getDesc()))
-                                            );
-                                            listView1.setVisibility(View.INVISIBLE);
-                                            close.setVisibility(View.INVISIBLE);
-                                        }
-                                    });
+                                    if (myPlace != null)
+                                        listView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                            @Override
+                                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                                myPlace = dm.myObject(latLng.latitude, latLng.longitude, 0, "", "Manhole", position + 1, "By ADMIN", GENDER_TYPE.Male, PLACE_TYPE.Manhole);
+                                                dictionary.put(myPlace.getId(), myPlace);
+                                                allPlaces.add(myPlace);
+                                                mMap.addMarker(new MarkerOptions()
+                                                                .position(new LatLng(myPlace.getLat(), myPlace.getLon()))
+                                                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.qr_roadhatch))
+                                                                .title(myPlace.getName())
+                                                                .snippet("level: " + String.valueOf(myPlace.getLevel() + "  " + myPlace.getPlace().toString() + "  " + myPlace.getDesc()))
+                                                );
+                                                mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(myPlace.getLat(), myPlace.getLon())));
+                                                listView1.setVisibility(View.GONE);
+                                                close.setVisibility(View.GONE);
+                                            }
+                                        });
                                     break;
-                                case 5:
-                                    myPlace = dm.myObject(latLng.latitude, latLng.longitude, 0, "", "Chest", 0, "By me", GENDER_TYPE.Male, PLACE_TYPE.Chest);
-                                    dictionary.put(myPlace.getId(), myPlace);
-                                    allPlaces.add(myPlace);
-                                    if(myPlace != null)
-                                    mMap.addMarker(new MarkerOptions()
-                                                    .position(new LatLng(myPlace.getLat(), myPlace.getLon()))
-                                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.qr_chest))
-                                                    .title(myPlace.getName())
-                                                    .snippet("level: " + String.valueOf(myPlace.getLevel() + "  " + myPlace.getPlace().toString() + "  " + myPlace.getDesc()))
-                                    );
-                                    listView.setVisibility(View.INVISIBLE);
-                                    close.setVisibility(View.INVISIBLE);
-                                    break;
-                                case 6:
-                                    listView.setVisibility(View.INVISIBLE);
-                                    listView1.setVisibility(View.VISIBLE);
-                                    if(myPlace != null)
-                                    listView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                        @Override
-                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                            myPlace = dm.myObject(latLng.latitude, latLng.longitude, 0, "", "Manhole", position + 1, "By me", GENDER_TYPE.Male, PLACE_TYPE.Manhole);
-                                            dictionary.put(myPlace.getId(), myPlace);
-                                            allPlaces.add(myPlace);
-                                            mMap.addMarker(new MarkerOptions()
-                                                            .position(new LatLng(myPlace.getLat(), myPlace.getLon()))
-                                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.qr_roadhatch))
-                                                            .title(myPlace.getName())
-                                                            .snippet("level: " + String.valueOf(myPlace.getLevel() + "  " + myPlace.getPlace().toString() + "  " + myPlace.getDesc()))
-                                            );
-                                            listView1.setVisibility(View.GONE);
-                                            close.setVisibility(View.GONE);
-                                        }
-                                    });
-
                             }
-
                         }
-
-
                     });
                 }
 
                 if (scan.isChecked()) {
+                    mediaPlayer = MediaPlayer.create(MapActivity.this, R.raw.scan_2);
+                    mediaPlayer.start();
                     ArrayList<Place> alPl = new ArrayList<Place>();
                     alPl = dm.ParseScanResponse(latLng.latitude, latLng.longitude);
                     if (alPl != null) {
+
                         for (int i = 0; i < alPl.size(); i++) {
                             if (!dictionary.containsKey(alPl.get(i).getId())) {
                                 switch (alPl.get(i).getPlace()) {
@@ -366,14 +339,14 @@ public class MapActivity extends FragmentActivity {
                         for (int i = 0; i < allPlaces.size(); i++) {
                             if (marker.getPosition().latitude == allPlaces.get(i).getLat() && marker.getPosition().longitude == allPlaces.get(i).getLon()) {
                                 Place pickUpPlace = dm.pickUp(allPlaces.get(i));
-                                if(pickUpPlace.getPlace().equals(CheckPoint) && pickUpPlace.getLevel() > 1){
-                                    while(pickUpPlace.getLevel() > 1)
-                                    {
+                                if (pickUpPlace.getPlace().equals(CheckPoint) && pickUpPlace.getLevel() > 1) {
+                                    while (pickUpPlace.getLevel() > 1) {
                                         pickUpPlace.setLevel(pickUpPlace.getLevel() - 1);
                                         dm.pickUp(pickUpPlace);
                                     }
+                                } else {
+                                    dm.pickUp(allPlaces.get(i));
                                 }
-                                else {dm.pickUp(allPlaces.get(i));}
                                 Log.d("pickUp", "ok");
                                 dictionary.remove(allPlaces.get(i).getId());
                                 allPlaces.remove(i);
@@ -413,11 +386,10 @@ public class MapActivity extends FragmentActivity {
         type.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mMap.getMapType() == GoogleMap.MAP_TYPE_TERRAIN){
+                if (mMap.getMapType() == GoogleMap.MAP_TYPE_TERRAIN) {
                     mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                     type.setText("TERRAIN");
-                }
-                else{
+                } else {
                     mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
                     type.setText("HYBRID");
                 }
