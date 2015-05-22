@@ -111,7 +111,7 @@ public class MapActivity extends FragmentActivity {
                 loc = false;
             }
         });
-
+        //
         //////////CreatePlace///////////////////////////////////////
         dm = DataManager.getInstance();
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
